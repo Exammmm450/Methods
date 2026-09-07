@@ -1,86 +1,44 @@
-import express from "express";
+import express from 'express'
 
-const app = express();
-app.use(express.json());
+const app = express()
+app.use(express.json())
 
-const products = [
-  { id: 1, name: "Product 1"},
-  { id: 2, name: "Product 2"},
-  { id: 3, name: "Product 3"},
-];
+const users = [
+    {id: 1, name : 'John', age: 25},
+    {id: 2, name : 'Jane', age: 30},
+    {id: 3, name : 'Doe', age: 22}
+]
 
-app.get("/products", (req, res) => {
-  res.send(products);
-});
-
-app.put("/products/:id", (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-
-  const product = products.find((p) => p.id === Number(id));
-  if (!product) {
-    return res.status(404).json({ message: "Product not found" });
-  }
-
-  if(name) {
-    product.name = name;
-  }
-
-  res.status(301).json({ 
-    message: "Product updated successfully", 
-    allProducts: product 
-  }); 
-
-})
-
-
-app.delete("/products/:id", (req, res) => {
-  const { id } = req.params;  
-
-
-  const index = products.findIndex((p) => p.id === Number(id));
-
-   if (index === -1) {
-    return res.status(404).json({ message: "Product not found" });
-  }
-
-  const deleted =  products.splice(index, 1);
-
-  res.json({
-    message: "Product deleted successfully",
-  });
-
-  res.json({
-    message: "Product deleted successfully"
-  })
-
+app.get("/", (req, res) => {    
+    res.send("Hello World")
 })
 
 app.get("/users", (req, res) => {
-  res.send("Hello World");
-});
+    res.send(users)
+})
 
-app.post("/users", (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name) {
-      return res.status(400).json({ message: "Name is required" });
-    }
-    users.push(name);
-    res.status(201).json({ 
-      message: "User added successfully", 
-      allusers: users 
-    });
+app.get("/users/:id", (req, res) => {
+    const id = req.params.id
+    const name = req.query
+    const age = req.query
     
-  } catch (error) {
-    res.status(501).json({ message: "Internal Server Error" });
+    const user = users.find(x=> x.id == id)
+})
+
+
+   app.get("/search", (req, res) => {
+  const { name, price, minPrice, maxPrice } = req.query; 
+  let result = fruits;
+  if (name) {
+    result = result.filter((x) => x.name.includes(name));
   }
+  if (price) {
+    result = result.filter((x) => x.price === Number(price));
+  }
+
+  res.json(result); 
 });
 
-
-
-
-
-app.listen(8842, () => {
-  console.log("Server is running on http://localhost:8842");
+    app.listen(6491, () => {
+    console.log("Server is running on port http://localhost:6491")
 })
